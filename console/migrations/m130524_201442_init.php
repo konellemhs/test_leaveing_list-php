@@ -14,21 +14,20 @@ class m130524_201442_init extends Migration
 
         $this->createTable('{{%user}}', [
             'id' => $this->primaryKey(),
-            'username' => $this->string()->notNull()->unique(),
-           // 'auth_key' => $this->string(32)->notNull(),
-            'password' => $this->string()->notNull(),
-            //'password_reset_token' => $this->string()->unique(),
-            //'email' => $this->string()->notNull()->unique(),
-            'role' => $this->string()->notNull()->defaultValue('user'),
-            // 'status' => $this->smallInteger()->notNull()->defaultValue(10),
-            //'status' => $this->smallInteger()->notNull()->defaultValue(0),
-           // 'created_at' => $this->integer()->notNull(),
-            //'updated_at' => $this->integer()->notNull(),
+            'username'         => $this->string()->notNull()->unique(),
+            'password'         => $this->string()->notNull(),
+            'first_name'       => $this->string()->notNull(),
+            'last_name'        => $this->string()->notNull(),
+            'role'             => $this->string()->notNull()->defaultValue('user'),
+            'date_leave_start' => $this->date(),
+            'date_leave_finsh' => $this->date(),
+            'fixied'           => $this->boolean()->notNull()->defaultValue(0)
+
         ], $tableOptions);
     }
 
     public function down()
     {
-        $this->dropTable('{{%user}}');
+        $this->dropTable('{{%user}');
     }
 }

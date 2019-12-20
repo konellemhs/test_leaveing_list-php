@@ -10,6 +10,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class SignupForm extends Model
 {
+    public $last_name;
+    public $first_name;
     public $username;
     public $role;
     public $password;
@@ -17,16 +19,18 @@ class SignupForm extends Model
 
 public function rules() {
  return [
- [['username', 'password','role'], 'required', 'message' => 'Заполните поле'],
+ [['username', 'password','role','first_name','last_name'], 'required', 'message' => 'Заполните поле'],
  ['username', 'unique', 'targetClass' => User::className(),  'message' => 'Этот логин уже занят'],
  ];
  }
     
     public function attributeLabels() {
         return [
-            'username' => 'Логин',
-            'password' => 'Пароль',
-            'role' => 'role',
+            'first_name' => 'Имя',
+            'last_name'  => 'Фамилия',
+            'username'   => 'Логин',
+            'password'   => 'Пароль',
+            'role'       => 'Должность',
         ];
     }
 
@@ -42,15 +46,12 @@ public function rules() {
         }
         
         $user = new User();
-
-        $user->username = $this->username;
+        $user->last_name  = $this->last_name;
+        $user->first_name = $this->first_name;
+        $user->username   = $this->username;
         $user->setPassword($this->password);
-        $user->role = $this->role;
-       // $user->generateAuthKey();
-      
+        $user->role      = $this->role;
 
-        
-       
         return $user->save();   
 
     }

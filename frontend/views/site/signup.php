@@ -19,6 +19,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin() ?>
 
+                 <?= $form->field($model, 'first_name') ?>
+                 <?= $form->field($model, 'last_name') ?>
+
                 <?= $form->field($model, 'username') ?>
 
 
