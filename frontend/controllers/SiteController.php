@@ -10,7 +10,7 @@ use common\models\User;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-//use common\models\LoginForm;
+use common\models\LoginForm;
 //use frontend\models\PasswordResetRequestForm;
 //use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
@@ -53,15 +53,18 @@ class SiteController extends Controller
 
 
 
-             public function actionSignup()
+     public function actionSignup()
     {
 
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+            Yii::$app->session->setFlash('success', 'Thank you for registration.');
+
+
             return $this->goHome();
         }
-      
+
+
         return $this->render('signup', [
             'model' => $model,
         ]);
@@ -113,6 +116,42 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
+
+
+     public function actionLogin()
+    {
+         if (!Yii::$app->user->isGuest) {
+        return $this->goHome();
+        }
+
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post())) {
+            try{
+
+                if($model->login()){
+                    return $this->goBack();
+                }else{
+                    $model->password = '';
+                }
+
+            } catch (\DomainException $e){
+                Yii::$app->session->setFlash('error', $e->getMessage());
+                return $this->goHome();
+            }
+        }
+
+        return $this->render('login', [
+                'model' => $model,
+            ]);
+
+    }
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+
+        return $this->goHome();
+    }
+
     // public function actionSignup()
     // {
     //     if (!Yii::$app->user->isGuest) {
@@ -131,7 +170,12 @@ class SiteController extends Controller
     //     }
     // }
 
+
+
+
+
 }
+
 
 
     /**

@@ -80,18 +80,29 @@ class User extends ActiveRecord implements IdentityInterface
         {
         $this->password = Yii::$app->security->generatePasswordHash($password);
          }
+  
+            // public function validatePassword($attribute, $params)
+            // {
+            //     if (!$this->hasErrors()) {
+            //         if(!$this->getUser())
+            //         {
+            //        $this->addError($attribute, 'Неверный пароль');
+            //         } 
+            //     }
+            // }
+        public function validatePassword($password)
+          {
 
-        public function validatePassword($attribute, $params)
-        {
-            if (!$this->hasErrors()) {
-                if(!$this->getUser())
-                {
-               $this->addError($attribute, 'Неверный пароль');
-                } 
-            }
-        }
 
-        
+           
+            $hash = $this->password;
+         
+        return Yii::$app->security->validatePassword($password, $hash);
+          }
+        public static function findByUsername($username)
+      {
+        return static::findOne(['username' => $username /*,'status' => self::STATUS_ACTIVE*/]);
+    }
 
 
         //  public function generateAuthKey()

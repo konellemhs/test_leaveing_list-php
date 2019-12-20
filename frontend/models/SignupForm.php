@@ -44,7 +44,7 @@ public function rules() {
         $user = new User();
 
         $user->username = $this->username;
-        $user->password = Yii::$app->security->generatePasswordHash($password);
+        $user->setPassword($this->password);
         $user->role = $this->role;
        // $user->generateAuthKey();
       

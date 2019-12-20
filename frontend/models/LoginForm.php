@@ -41,12 +41,18 @@ class LoginForm extends Model
      */
     public function validatePassword($attribute, $params)
     {
-
+        var_dump($attribute);
+        ?><br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <? var_dump($params);
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
-            }
+            // if (!$user || !$user->validatePassword($this->password)) {
+            //     $this->addError($attribute, 'Incorrect username or password.');
+            // }
         }
     }
 
@@ -70,12 +76,12 @@ class LoginForm extends Model
             if ($this->validate()) {
 
                 $user = $this->getUser();
-                //if($user->status === User::STATUS_ACTIVE){
+                if($user->status === User::STATUS_ACTIVE){
                     return Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
-                //}
-                // if($user->status === User::STATUS_WAIT){
-                //     throw new \DomainException('To complete the registration, confirm your email. Check your email.');
-                // }
+                }
+                if($user->status === User::STATUS_WAIT){
+                    throw new \DomainException('To complete the registration, confirm your email. Check your email.');
+                }
 
             } else {
                 return false;
@@ -92,7 +98,7 @@ class LoginForm extends Model
         if ($this->_user === null) {
             $this->_user = User::findByUsername($this->username);
         }
-       
+
         return $this->_user;
     }
 }
