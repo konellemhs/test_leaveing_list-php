@@ -17,7 +17,6 @@ use yii\web\IdentityInterface;
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $verification_token
- * @property string $email
  * @property string $auth_key
  * @property integer $status
  * @property integer $created_at
@@ -93,8 +92,6 @@ class User extends ActiveRecord implements IdentityInterface
         public function validatePassword($password)
           {
 
-
-           
             $hash = $this->password;
          
         return Yii::$app->security->validatePassword($password, $hash);

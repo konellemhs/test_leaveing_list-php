@@ -14,6 +14,7 @@ use common\models\LoginForm;
 //use frontend\models\PasswordResetRequestForm;
 //use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
+use frontend\models\RequestForm;
 //use frontend\models\ContactForm;
 //use common\services\auth\SignupService;
 /**
@@ -71,7 +72,23 @@ class SiteController extends Controller
     }
 
 
+        public function actionAbout(){
 
+            $model = new RequestForm();
+            
+        if ($model->load(Yii::$app->request->post()) && $model->request()) {
+    
+            Yii::$app->session->setFlash('success','Ваша заявка принята в обработку...');
+          
+            return $this->goHome();
+        }
+
+
+        return $this->render('about', [
+            'model' => $model,
+        ]);
+    }
+        
 
          public function behaviors()
          {

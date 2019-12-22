@@ -13,21 +13,21 @@ class m130524_201442_init extends Migration
         }
 
         $this->createTable('{{%user}}', [
-            'id' => $this->primaryKey(),
-            'username'         => $this->string()->notNull()->unique(),
-            'password'         => $this->string()->notNull(),
-            'first_name'       => $this->string()->notNull(),
-            'last_name'        => $this->string()->notNull(),
-            'role'             => $this->string()->notNull()->defaultValue('user'),
-            'date_leave_start' => $this->date(),
-            'date_leave_finsh' => $this->date(),
-            'fixied'           => $this->boolean()->notNull()->defaultValue(0)
+            'id'          => $this->primaryKey(),
+            'username'    => $this->string()->notNull()->unique(),
+            'password'    => $this->string()->notNull(),
+            'first_name'  => $this->string()->notNull(),
+            'last_name'   => $this->string()->notNull(),
+            'role'        => $this->string()->notNull()->defaultValue('user'),
+            'date_start'  => $this->string(),
+            'date_finish' => $this->string(),
+            'fixied'      => $this->boolean()->notNull()->defaultValue(0)
 
         ], $tableOptions);
     }
 
     public function down()
     {
-        $this->dropTable('{{%user}');
+        $this->dropTable('{{%user}}');
     }
 }

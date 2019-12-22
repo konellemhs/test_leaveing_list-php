@@ -6,7 +6,7 @@ use yii\base\Model;
 use common\models\User;
 use yii\behaviors\TimestampBehavior;
 /**
- * Signup form
+ * Signup newt_form()
  */
 class SignupForm extends Model
 {
@@ -19,7 +19,7 @@ class SignupForm extends Model
 
 public function rules() {
  return [
- [['username', 'password','role','first_name','last_name'], 'required', 'message' => 'Заполните поле'],
+ [['username', 'password','role','first_name','last_name' ], 'required', 'message' => 'Заполните поле'],
  ['username', 'unique', 'targetClass' => User::className(),  'message' => 'Этот логин уже занят'],
  ];
  }

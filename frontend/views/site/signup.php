@@ -27,7 +27,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
-                 <?= $form->field($model, 'role') ?>
+                 <?= $form->field($model, 'role')->dropDownList([
+                    '0' => 'Сотрудник',
+                    '1' => 'Руководитель'
+
+                 ]); ?>
 
                 <div class="form-group">
                    <?= Html::submitButton('Регистрация', ['class' => 'btn btn-success']) ?>

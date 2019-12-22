@@ -40,8 +40,19 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
+             // 'baseUrl'=> '', 
+             'rules' => [
+                '/' => 'site/index',
+                '<action:' => 'site/<action>',
             ],
+        ],
+
+        'formatter' => [
+            'class'              => 'yii\i18n\Formatter',
+            'decimalSeparator'   => ',',
+            'thousandSeparator'  => ' ',
+            'currencyCode'      => 'EUR',
+            'dateFormat'         => 'php: d/m/y',
         ],
         
     ],

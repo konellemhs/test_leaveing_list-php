@@ -35,11 +35,22 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Главная', 'url' => ['/site/index']],
-        ['label' => 'О нас', 'url' => ['/site/about']],
-        ['label' => 'Контакты', 'url' => ['/site/contact']],
+   
+
+    if (Yii::$app->user->identity->role === '0' && is_null(Yii::$app->user->identity->date_start) ) {  
+         $menuItems = [
+                ['label' => 'Список заявок', 'url' => ['/site/index']],
+                ['label' => '+Создать заявку', 'url' => ['/site/about']]];
+   
+    }elseif (Yii::$app->user->identity->role === '0' && !is_null(Yii::$app->user->identity->date_start)) {
+       $menuItems = [
+        ['label' => 'Список заявок', 'url' => ['/site/index']],
+        ['label' => 'Моя заявка', 'url' => ['/site/contact']]];
+    }elseif(Yii::$app->user->identity->role === '1'){
+       $menuItems = [
+        ['label' => 'Список заявок', 'url' => ['/site/index']]
     ];
+    }
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Регистрация', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
@@ -70,6 +81,7 @@ AppAsset::register($this);
         <?= $content ?>
     </div>
 </div>
+
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
