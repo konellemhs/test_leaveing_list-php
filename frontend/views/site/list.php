@@ -14,12 +14,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+<p>
 
+      <?= Html::a("Обновить", ['index'], ['class' => 'btn btn-lg btn-primary'])?>
+ </p>
 
   
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'summary'       => false,
          'rowOptions'    => function ($model, $key, $index, $grid)
                              {
                              if($model->fixied == 1) {
@@ -30,7 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
             
             ['class' => 'yii\grid\SerialColumn'],
 
-          
             'first_name',
             'last_name',
             'date_start',

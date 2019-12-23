@@ -49,7 +49,7 @@ AppAsset::register($this);
     }elseif (Yii::$app->user->identity->role === '0' && !is_null(Yii::$app->user->identity->date_start)) {
        $menuItems = [
         ['label' => 'Список заявок', 'url' => ['/site/index']],
-        ['label' => 'Моя заявка', 'url' => ['/site/contact']]];
+        ['label' => 'Моя заявка', 'url' => ['/site/about']]];
     }elseif(Yii::$app->user->identity->role === '1'){
        $menuItems = [
         ['label' => 'Список заявок', 'url' => ['/site/index']]
