@@ -1,4 +1,5 @@
 <?php
+
 namespace frontend\models;
 
 use Yii;
@@ -6,7 +7,9 @@ use yii\base\Model;
 use common\models\User;
 use yii\behaviors\TimestampBehavior;
 use yii2\validators\DateValidator;
-class RequestForm extends Model
+use yii\grid\GridView;
+use yii\data\ActiveDataProvider;
+class ListModel extends Model
 {
 	public $date_start;
 	public $date_finish;
@@ -16,7 +19,9 @@ class RequestForm extends Model
     private $date_s;
     private $date_f;
 
-  
+  public function search(){
+    return true;
+  }
 
 
     public function rules(){
@@ -83,20 +88,20 @@ class RequestForm extends Model
     }
 
 
-    public function request(){
+    public function list(){
 
-               if (!$this->validateDate()) {
-                    return false;
-                } 
-                $date_s = $this->date_start;
-                $date_f = $this->date_finish;
-                 $user =User::findIdentity(Yii::$app->user->identity->id);
-                $user->date_exists = 1; //оставляем метку что сотрудник запонил заявку
-                $user->date_start  = $date_s;
-                $user->date_finish = $date_f;
+               // if (!$this->validateDate()) {
+               //      return false;
+               //  } 
+               //  $date_s = $this->date_start;
+               //  $date_f = $this->date_finish;
+               //   $user =User::findIdentity(Yii::$app->user->identity->id);
+            
+               //  $user->date_start = $date_s;
+               //  $user->date_finish= $date_f;
               
 
-                return $user->save();
+               //  return $user->save();
 
     }
 }

@@ -19,6 +19,7 @@ class m130524_201442_init extends Migration
             'first_name'  => $this->string()->notNull(),
             'last_name'   => $this->string()->notNull(),
             'role'        => $this->string()->notNull()->defaultValue('user'),
+            'date_exists' => $this->boolean()->notNull()->defaultValue(0),
             'date_start'  => $this->string(),
             'date_finish' => $this->string(),
             'fixied'      => $this->boolean()->notNull()->defaultValue(0)

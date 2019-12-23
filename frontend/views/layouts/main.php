@@ -42,6 +42,10 @@ AppAsset::register($this);
                 ['label' => 'Список заявок', 'url' => ['/site/index']],
                 ['label' => '+Создать заявку', 'url' => ['/site/about']]];
    
+    }elseif(Yii::$app->user->identity->role === '0' && Yii::$app->user->identity->fixied == 1){
+
+            $menuItems = [
+                ['label' => 'Список заявок', 'url' => ['/site/index']]];
     }elseif (Yii::$app->user->identity->role === '0' && !is_null(Yii::$app->user->identity->date_start)) {
        $menuItems = [
         ['label' => 'Список заявок', 'url' => ['/site/index']],

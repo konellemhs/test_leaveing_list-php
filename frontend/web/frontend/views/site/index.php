@@ -7,35 +7,36 @@ use yii\grid\GridView;
 /* @var $searchModel frontend\models\UsertSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Список';
+$this->title = 'Userts';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="usert-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <p>
+        <?= Html::a('Create Usert', ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
 
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-  
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-         'rowOptions'    => function ($model, $key, $index, $grid)
-                             {
-                             if($model->fixied == 1) {
-                                return ['style' => 'background-color: #9ACD32'];
-                              }
-                         },
         'columns' => [
-            
             ['class' => 'yii\grid\SerialColumn'],
 
-          
+            'id',
+            'username',
+            'password',
             'first_name',
             'last_name',
-            'date_start',
-            'date_finish',
-         
+            //'role',
+            //'date_start',
+            //'date_finish',
+            //'fixied',
+
+            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 

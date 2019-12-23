@@ -40,7 +40,7 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-             // 'baseUrl'=> '', 
+            // 'baseUrl'=> '', 
              'rules' => [
                 '/' => 'site/index',
                 '<action:' => 'site/<action>',
