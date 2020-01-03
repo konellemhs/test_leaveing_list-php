@@ -47,6 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                  ],
            
               'type' => DatePicker::TYPE_INPUT,
+              'language' => 'ru',
               'pluginOptions' => [
                 'todayHighlight' => true,
                 'autoclose'=>true,
