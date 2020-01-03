@@ -13,6 +13,7 @@ return [
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
+            'baseUrl'=> '', 
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
@@ -42,7 +43,7 @@ return [
             'showScriptName' => false,
             // 'baseUrl'=> '', 
              'rules' => [
-                '/' => 'site/index',
+                 '/' => 'site/index',
                 '<action:' => 'site/<action>',
             ],
         ],
