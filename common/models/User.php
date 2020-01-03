@@ -62,7 +62,7 @@ class User extends ActiveRecord implements IdentityInterface
                 $this->user = Users::findOne(['username'=>$this->username, 
                                                 'password'=>$this->password]);
            }
-                
+                 
           return $this->user;
     }
 

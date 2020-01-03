@@ -1,5 +1,5 @@
 <?php
-namespace common\models;
+namespace frontend\models;
 
 use Yii;
 use yii\base\Model;
@@ -17,9 +17,6 @@ class LoginForm extends Model
     private $_user;
 
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -36,6 +33,7 @@ class LoginForm extends Model
         return [
             'username'   => 'Логин',
             'password'   => 'Пароль',
+            'rememberMe' => 'Запомнить меня' ,
         ];
     }
     /**
