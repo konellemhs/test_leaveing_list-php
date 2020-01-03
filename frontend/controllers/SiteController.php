@@ -26,22 +26,34 @@ use frontend\models\UsertSearch;
 class SiteController extends Controller
 {
     
-     public function actionSignup()
-    {
+    /*
+    actionSignup -  действие регистрации пользователя на сервисе, после регистрации просисходит автологин
+    */
+        public function actionSignup(){
 
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Регистрация прошла успешно.Авторизуйтесь');
+            $model = new SignupForm();
+            if ($model->load(Yii::$app->request->post())) {
+            
+                if ($user = $model->signup()) {                                                                                // возврат пользователя для автологина
+
+                    if (Yii::$app->getUser()->login($user)) {																	// автологин пользователя
+                    
+                        Yii::$app->session->setFlash('success', 'Добро пожаловать, '. Yii::$app->user->identity->first_name);
+
+                        if (Yii::$app->user->identity->fixied === 1) {													// вывод сообщения о успехе, если заяка уже зафиксирована
+                                Yii::$app->session->setFlash('success', 'Ваша заявка на отпуск с '  .  Yii::$app->user->identity->date_start . ' по ' . Yii::$app->user->identity->date_finish . ' была зафиксирована. Хорошего отдыха!' );
+                                }
+
+                        return $this->goHome();
+                    }
+                } 
+            }
 
 
-            return Yii::$app->response->redirect('login');
+            return $this->render('signup', [
+                'model' => $model,
+            ]);
         }
-
-
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
-    }
 
 
         public function actionLogin()
@@ -178,6 +190,10 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
+    // public function actionRole()
+    // {
+        
+    // }
 
 }
 

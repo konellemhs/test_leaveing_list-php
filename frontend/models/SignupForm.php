@@ -34,8 +34,24 @@ public function rules() {
         ];
     }
 
- public function signup()
-    {
+    public function setRole($params, $id){
+
+        switch ($params) {
+            case '1':
+               $role = Yii::$app->authManager->getRole('boss');
+               Yii::$app->authManager->assign($role, $id);
+                break;
+            
+            default:
+                $role = Yii::$app->authManager->getRole('employee');
+                Yii::$app->authManager->assign($role, $id);
+                break;
+        }
+    }
+
+
+    public function signup() {
+
         if (!$this->validate()) {
             return null;
         }
@@ -46,12 +62,13 @@ public function rules() {
         $user->username   = $this->username;
         $user->setPassword($this->password);
         $user->role      = $this->role;
-
-        return $user->save();   
+        $user->save();
+    //     if ($user->save()) {                         //сохранение пользователя
+    //       $this->setRole($this->role , $user->id);  // установка ролей
+    //    }                                            // установка ролей
+        return $user;   
 
     }
-
-                
 
 
   
