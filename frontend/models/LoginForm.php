@@ -17,6 +17,9 @@ class LoginForm extends Model
     private $_user;
 
 
+    /**
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [
@@ -36,6 +39,7 @@ class LoginForm extends Model
             'rememberMe' => 'Запомнить меня' ,
         ];
     }
+
     /**
      * Validates the password.
      * This method serves as the inline validation for password.
@@ -45,12 +49,28 @@ class LoginForm extends Model
      */
     public function validatePassword($attribute, $params)
     {
-      
+
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-          
+            if (!$user || !$user->validatePassword($this->password)) {
+                $this->addError($attribute, 'Incorrect username or password.');
+            }
         }
     }
+
+    /**
+     * Logs in a user using the provided username and password.
+     *
+     * @return bool whether the user is logged in successfully
+     */
+    // public function login()
+    // {
+    //     if ($this->validate()) {
+    //         return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+    //     }
+        
+    //     return false;
+    // }
 
 
     public function login()
@@ -58,12 +78,12 @@ class LoginForm extends Model
             if ($this->validate()) {
 
                 $user = $this->getUser();
-                if($user->status === User::STATUS_ACTIVE){
+                //if($user->status === User::STATUS_ACTIVE){
                     return Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
-                }
-                if($user->status === User::STATUS_WAIT){
-                    throw new \DomainException('To complete the registration, confirm your email. Check your email.');
-                }
+                //}
+                // if($user->status === User::STATUS_WAIT){
+                //     throw new \DomainException('To complete the registration, confirm your email. Check your email.');
+                // }
 
             } else {
                 return false;
@@ -80,7 +100,7 @@ class LoginForm extends Model
         if ($this->_user === null) {
             $this->_user = User::findByUsername($this->username);
         }
-
+       
         return $this->_user;
     }
 }

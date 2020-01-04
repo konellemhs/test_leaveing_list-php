@@ -10,7 +10,7 @@ use common\models\User;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+use frontend\models\LoginForm;
 //use frontend\models\PasswordResetRequestForm;
 //use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
@@ -27,7 +27,8 @@ class SiteController extends Controller
 {
     
     /*
-    actionSignup -  действие регистрации пользователя на сервисе, после регистрации просисходит автологин
+    actionSignup -  действие регистрации пользователя на сервисе,
+     после регистрации просисходит автологин
     */
         public function actionSignup(){
 
@@ -161,9 +162,9 @@ class SiteController extends Controller
 
      public function actionIndex()
     {
-        if (Yii::$app->user->isGuest) {
-               return Yii::$app->response->redirect('site\login');
-        }
+        // if (Yii::$app->user->isGuest) {
+        //        return Yii::$app->response->redirect('site\login');
+        // }
        
 
         $searchModel = new UsertSearch();
