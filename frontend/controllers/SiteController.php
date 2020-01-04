@@ -183,6 +183,27 @@ class SiteController extends Controller
     }
 
 
+    public function actionRole(){
+
+//         $role = Yii::$app->authManager->createRole('boss');
+// $role->description = 'Руководитель';
+// Yii::$app->authManager->add($role);
+ 
+// $user = Yii::$app->authManager->createRole('employee');
+// $user->description = 'Сотрудник';
+// Yii::$app->authManager->add($user);
+
+// $permit = Yii::$app->authManager->createPermission('canFix');
+// $permit->description = 'право фиксировать ';
+// Yii::$app->authManager->add($permit);
+// $role = Yii::$app->authManager->getRole('boss');
+// $permit = Yii::$app->authManager->getPermission('canFix');
+// Yii::$app->authManager->addChild($role, $permit);
+
+echo 21354;
+        
+    }
+
  
     public function actionLogout()
     {   

@@ -62,10 +62,10 @@ class SignupForm extends Model
         $user->username   = $this->username;
         $user->setPassword($this->password);
         $user->role      = $this->role;
-        $user->save();
-    //     if ($user->save()) {                         //сохранение пользователя
-    //       $this->setRole($this->role , $user->id);  // установка ролей
-    //    }                                            // установка ролей
+       
+        if ($user->save()) {                         //сохранение пользователя
+          $this->setRole($this->role , $user->id);  // установка ролей
+       }                                            // установка ролей
         return $user;   
 
     }

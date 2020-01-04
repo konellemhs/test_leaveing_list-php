@@ -16,6 +16,9 @@ return [
             'baseUrl'=> '', 
             'csrfParam' => '_csrf-frontend',
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager', 
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
