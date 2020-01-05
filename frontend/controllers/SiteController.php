@@ -1,31 +1,79 @@
 <?php
 namespace frontend\controllers;
 
-//use frontend\models\ResendVerificationEmailForm;
-//use frontend\models\VerifyEmailForm;
 use Yii;
 use common\models\User;
-//use yii\base\InvalidArgumentException;
-//use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use frontend\models\LoginForm;
-//use frontend\models\PasswordResetRequestForm;
-//use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\RequestForm;
 use frontend\models\Usert;
 use frontend\models\UsertSearch;
-
-//use frontend\models\ContactForm;
-//use common\services\auth\SignupService;
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
-    
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['signup', 'login'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['index','list','logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['about'],
+                        'allow' => true,
+                        'roles' => ['employee'],
+                    ],
+                    [
+                        'actions' => ['about'],
+                        'allow' => false,
+                        'roles' => ['boss'],
+                         // редиректит пользователя в случае попытки совершить action не для его роли
+                        'denyCallback' => function ($rule, $action) {                
+                                return $action->controller->redirect('index');
+                            },
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['boss'],
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => false,
+                        'roles' => ['employee'],
+                         // редиректит пользователя в случае попытки совершить action не для его роли
+                        'denyCallback' => function ($rule, $action) {                
+                                return $action->controller->redirect('index');
+                            },
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
+
+   
+
     /*
     actionSignup -  действие регистрации пользователя на сервисе,
      после регистрации просисходит автологин
@@ -57,8 +105,8 @@ class SiteController extends Controller
         }
 
 
-        public function actionLogin()
-            {
+        public function actionLogin(){
+
                  if (!Yii::$app->user->isGuest) {
                 return $this->goHome();
                 }
@@ -90,15 +138,15 @@ class SiteController extends Controller
     }
        
         public function actionAbout(){
-
-            $model = new RequestForm();
             
-        if ($model->load(Yii::$app->request->post()) && $model->request()) {
+             $model = new RequestForm();
+            
+             if ($model->load(Yii::$app->request->post()) && $model->request()) {
     
-            Yii::$app->session->setFlash('success','Ваша заявка принята в обработку...');
+                 Yii::$app->session->setFlash('success','Ваша заявка принята в обработку...');
           
-            return $this->goHome();
-        }
+                return $this->goHome();
+            }
 
 
         return $this->render('about', [
@@ -107,33 +155,7 @@ class SiteController extends Controller
     }
     
         
-         public function behaviors()
-         {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
+         
     public function actions()
     {
         return [
@@ -149,15 +171,17 @@ class SiteController extends Controller
 
    public function actionUpdate($id)
     {
+        
+        
+            $user = User::findIdentity($id);
+            $user->fixied = 1;
+            $user->save();
+            // echo '<pre>'; 
+            //          print_r(Yii::$app->user->identity->date_start); 
+            //          echo '</pre>';
+            Yii::$app->session->setFlash('success', 'Заявка на отпуск по сотруднику ' . $user->first_name . '  ' . $user->last_name  . '  с  ' .  $user->date_start . '  по  ' . $user->date_finish . '  зафиксирована');
+            return $this->goBack();
        
-        $user = User::findIdentity($id);
-        $user->fixied = 1;
-        $user->save();
-        // echo '<pre>'; 
-        //          print_r(Yii::$app->user->identity->date_start); 
-        //          echo '</pre>';
-        Yii::$app->session->setFlash('success', 'Заявка на отпуск по сотруднику ' . $user->first_name . '  ' . $user->last_name  . '  с  ' .  $user->date_start . '  по  ' . $user->date_finish . '  зафиксирована');
-        return $this->goBack();
    }
 
      public function actionIndex()
@@ -166,7 +190,7 @@ class SiteController extends Controller
         //        return Yii::$app->response->redirect('site\login');
         // }
        
-
+    
         $searchModel = new UsertSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -182,40 +206,12 @@ class SiteController extends Controller
         ]);
     }
 
-
-    public function actionRole(){
-
-//         $role = Yii::$app->authManager->createRole('boss');
-// $role->description = 'Руководитель';
-// Yii::$app->authManager->add($role);
- 
-// $user = Yii::$app->authManager->createRole('employee');
-// $user->description = 'Сотрудник';
-// Yii::$app->authManager->add($user);
-
-// $permit = Yii::$app->authManager->createPermission('canFix');
-// $permit->description = 'право фиксировать ';
-// Yii::$app->authManager->add($permit);
-// $role = Yii::$app->authManager->getRole('boss');
-// $permit = Yii::$app->authManager->getPermission('canFix');
-// Yii::$app->authManager->addChild($role, $permit);
-
-echo 21354;
-        
-    }
-
- 
     public function actionLogout()
     {   
         Yii::$app->user->logout();
 
         return $this->goHome();
     }
-
-    // public function actionRole()
-    // {
-        
-    // }
 
 }
 
