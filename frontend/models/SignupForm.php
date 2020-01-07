@@ -33,8 +33,12 @@ class SignupForm extends Model
             'role'       => 'Должность',
         ];
     }
-
-    public function setRole($params, $id){
+        /*
+            setRole принимает в аргументы id сотрудника и role, указанную  сотрудником при регистрации
+            Выполнияется установка ролей пользователя через authManager
+            Метод ничего не возвращает
+        */
+    private function setRole($params, $id){
 
         switch ($params) {
             case '1':
@@ -55,17 +59,20 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
-        $user = new User();
+        //создаем новую запись в таблице user
+        $user = new User();                             
         $user->last_name  = $this->last_name;
         $user->first_name = $this->first_name;
         $user->username   = $this->username;
         $user->setPassword($this->password);
-        $user->role      = $this->role;
-       
-        if ($user->save()) {                         //сохранение пользователя
-          $this->setRole($this->role , $user->id);  // установка ролей
-       }                                            // установка ролей
+        $user->role       = $this->role;
+        $user->status     = User::STATUS_NONE;
+        // $user->save();
+         //сохранение пользователя
+         if ($user->save()) {    
+              // Инициализируем установку роли для пользователя                  
+          $this->setRole($this->role , $user->id); 
+       }                                            
         return $user;   
 
     }

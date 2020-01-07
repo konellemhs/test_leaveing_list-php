@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace common\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -18,7 +18,7 @@ class LeaveSearch extends Leave
     {
         return [
             [['id'], 'integer'],
-            // [['username', 'password', 'first_name', 'last_name', 'role', 'date_start', 'date_finish'], 'safe'],
+            [['user_first_name', 'user_last_name', 'date_start', 'date_finish'], 'safe'],
         ];
     }
 
@@ -63,17 +63,14 @@ class LeaveSearch extends Leave
         // grid filtering conditions
         $query->andFilterWhere([
             'id'          => $this->id,
-              //проверяем должность юзера (отбираем только сотрудников)
-            // 'date_exists' =>  '1'   //проверяем наличие метки, говорящей о факте составления заявки
+             
         ]);
 
-        $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'password', $this->password])
-            ->andFilterWhere(['like', 'first_name', $this->first_name])
-            ->andFilterWhere(['like', 'last_name', $this->last_name])
-            ->andFilterWhere(['like', 'role', $this->role]);
-            // ->andFilterWhere(['like', 'date_start', $this->date_start])
-            // ->andFilterWhere(['like', 'date_finish', $this->date_finish]);
+        $query->andFilterWhere(['like', 'user_first_name', $this->user_first_name])
+            ->andFilterWhere(['like', 'user_last_name', $this->user_last_name])
+            // ->andFilterWhere(['like', 'role', $this->role]);
+            ->andFilterWhere(['like', 'start', $this->date_start])
+            ->andFilterWhere(['like', 'date_finish', $this->date_finish]);
 
         return $dataProvider;
     }

@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use common\models\User;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -37,24 +38,28 @@ AppAsset::register($this);
     ]);
    
 
-    if (Yii::$app->user->identity->role === '0' && is_null(Yii::$app->user->identity->date_start) ) {  
+    if (Yii::$app->user->identity->role === '0' && Yii::$app->user->identity->status == User::STATUS_NONE ) {  
          $menuItems = [
                 ['label' => 'Список заявок', 'url' => ['/site/index']],
                 ['label' => '+Создать заявку', 'url' => ['/site/about']]];
    
-    }elseif(Yii::$app->user->identity->role === '0' && Yii::$app->user->identity->fixied == 1){
+    }elseif(Yii::$app->user->identity->role === '0' &&  Yii::$app->user->identity->status == User::STATUS_FIX ){
 
             $menuItems = [
                 ['label' => 'Список заявок', 'url' => ['/site/index']]];
-    }elseif (Yii::$app->user->identity->role === '0' && !is_null(Yii::$app->user->identity->date_start)) {
+
+    }elseif (Yii::$app->user->identity->role === '0' && Yii::$app->user->identity->status == User::STATUS_WAIT ) {
+
        $menuItems = [
         ['label' => 'Список заявок', 'url' => ['/site/index']],
         ['label' => 'Моя заявка', 'url' => ['/site/about']]];
+
     }elseif(Yii::$app->user->identity->role === '1'){
        $menuItems = [
         ['label' => 'Список заявок', 'url' => ['/site/index']]
     ];
     }
+
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Регистрация', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Вход', 'url' => ['/site/login']];

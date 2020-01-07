@@ -3,14 +3,14 @@ namespace frontend\controllers;
 
 use Yii;
 use common\models\User;
+use common\models\Leave;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use frontend\models\LoginForm;
 use frontend\models\SignupForm;
 use frontend\models\RequestForm;
-use frontend\models\Usert;
-use frontend\models\UsertSearch;
+use common\models\LeaveSearch;
 /**
  * Site controller
  */
@@ -29,7 +29,7 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['index','list','logout'],
+                        'actions' => ['index','list','role','logout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -89,9 +89,9 @@ class SiteController extends Controller
                     
                         Yii::$app->session->setFlash('success', 'Добро пожаловать, '. Yii::$app->user->identity->first_name);
 
-                        if (Yii::$app->user->identity->fixied === 1) {													// вывод сообщения о успехе, если заяка уже зафиксирована
-                                Yii::$app->session->setFlash('success', 'Ваша заявка на отпуск с '  .  Yii::$app->user->identity->date_start . ' по ' . Yii::$app->user->identity->date_finish . ' была зафиксирована. Хорошего отдыха!' );
-                                }
+                        // if (Yii::$app->user->identity->fixied === 1) {													// вывод сообщения о успехе, если заяка уже зафиксирована
+                        //         Yii::$app->session->setFlash('success', 'Ваша заявка на отпуск с '  .  Yii::$app->user->identity->date_start . ' по ' . Yii::$app->user->identity->date_finish . ' была зафиксирована. Хорошего отдыха!' );
+                        //         }
 
                         return $this->goHome();
                     }
@@ -117,9 +117,9 @@ class SiteController extends Controller
 
                         if($model->login()){
                              Yii::$app->session->setFlash('success', 'Добро пожаловать, '. Yii::$app->user->identity->first_name);
-                             if (Yii::$app->user->identity->fixied === 1) {
-                                  Yii::$app->session->setFlash('success', 'Ваша заявка на отпуск с '  .  Yii::$app->user->identity->date_start . ' по ' . Yii::$app->user->identity->date_finish . ' была зафиксирована. Хорошего отдыха!' );
-        }
+        //                      if (Yii::$app->user->identity->fixied === 1) {
+        //                           Yii::$app->session->setFlash('success', 'Ваша заявка на отпуск с '  .  Yii::$app->user->identity->date_start . ' по ' . Yii::$app->user->identity->date_finish . ' была зафиксирована. Хорошего отдыха!' );
+        // }
                             return $this->goBack();
                         }else{
                             $model->password = '';
@@ -168,21 +168,39 @@ class SiteController extends Controller
             ],
         ];
     }
-
+    /*
+        Action фиксирования заявки руководителем
+    */
    public function actionUpdate($id)
-    {
-        
-        
-            $user = User::findIdentity($id);
-            $user->fixied = 1;
-            $user->save();
-            // echo '<pre>'; 
-            //          print_r(Yii::$app->user->identity->date_start); 
-            //          echo '</pre>';
-            Yii::$app->session->setFlash('success', 'Заявка на отпуск по сотруднику ' . $user->first_name . '  ' . $user->last_name  . '  с  ' .  $user->date_start . '  по  ' . $user->date_finish . '  зафиксирована');
+    {   /*
+            Находим пользователя по id
+            Устанавливаем ему статус зафиксированного пользователя
+            Меняем роль пользователя на leaving
+        */
+            $leave = Leave::findIdentity($id);
+
+            $leave->fixied = 1;
+            
+            $leave->save();
+
+
+             $user = User::findIdentity($id);
+            
+             $user->status = User::STATUS_FIX;
+             $user->save();
+
+            // $role = Yii::$app->authManager->getRole('leaving');
+            // Yii::$app->authManager->assign($role, $id);
+
+   //         Yii::$app->session->setFlash('success', 'Заявка на отпуск по сотруднику ' . $user->first_name . '  ' . $user->last_name  . '  с  ' .  $user->date_start . '  по  ' . $user->date_finish . '  зафиксирована');
             return $this->goBack();
        
    }
+
+
+    /*
+        Action основной страницы с gridView
+    */
 
      public function actionIndex()
     {
@@ -191,7 +209,7 @@ class SiteController extends Controller
         // }
        
     
-        $searchModel = new UsertSearch();
+        $searchModel = new LeaveSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if (Yii::$app->user->identity->role == '1') {
@@ -212,6 +230,25 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
+
+
+
+    // public function actionRole(){
+    //     //         $role = Yii::$app->authManager->createRole('boss');
+    //     // $role->description = 'Руководитель';
+    //     // Yii::$app->authManager->add($role);
+         
+    //     // $user = Yii::$app->authManager->createRole('employee');
+    //     // $user->description = 'Сотрудник';
+    //     // Yii::$app->authManager->add($user);
+        
+    //     $fix = Yii::$app->authManager->createRole('leaving');
+    //     $fix->description = 'Зафиксированный сотрудник';
+    //     Yii::$app->authManager->add($fix);
+     
+    //     echo 21354;
+                
+    //         }
 
 }
 

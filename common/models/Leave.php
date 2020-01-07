@@ -23,21 +23,45 @@ use yii\web\IdentityInterface;
  * @property integer $updated_at
  * @property string $password write-only password
  */
-class User extends ActiveRecord implements IdentityInterface
+class Leave extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_NONE = 0;
-    const STATUS_WAIT = 1;
-    const STATUS_FIX  = 2;
+       /**
+     * {@inheritdoc}
+     */
+       public static function tableName()
+        {
+            return 'leave';
+        }
 
+    // /**
+    //  * {@inheritdoc}
+    //  */
+    // public function rules()
+    // {
+    //     return [
+    //         [['user_first_name', 'user_last_name'], 'required'],
+    //         [['fixied'], 'integer'],
+    //         [['username', 'password', 'first_name', 'last_name', 'role', 'date_start', 'date_finish'], 'string', 'max' => 255],
+    //         [['username'], 'unique'],
+    //     ];
+    // }
 
-   public static function print($params){
-
-     echo '<pre>'; 
-     print_r($params); 
-     echo '</pre>';
-    
-   }
-
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'user_first_name' => 'Имя',
+            'user_last_name' => 'Фамилия',
+            // 'role' => 'Role',
+            'date_start' => 'Дата начала отпуска',
+            'date_finish' => 'Дата окончания отпуска',
+           'fixied' => 'Fixied',
+        ];
+    }
+   
     public static function findIdentity($id)
     {
         return static::findOne($id);
@@ -68,12 +92,12 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function getUser()
      {
-           if ($this->user === false) {
-                $this->user = Users::findOne(['username'=>$this->username, 
-                                                'password'=>$this->password]);
-           }
+        //    if ($this->user === false) {
+        //         $this->user = Users::findOne(['username'=>$this->username, 
+        //                                         'password'=>$this->password]);
+        //    }
                  
-          return $this->user;
+        //   return $this->user;
     }
 
     // public function rules()
@@ -87,7 +111,7 @@ class User extends ActiveRecord implements IdentityInterface
 
  public function setPassword($password)
         {
-        $this->password = Yii::$app->security->generatePasswordHash($password);
+        // $this->password = Yii::$app->security->generatePasswordHash($password);
          }
   
             // public function validatePassword($attribute, $params)
@@ -102,13 +126,13 @@ class User extends ActiveRecord implements IdentityInterface
         public function validatePassword($password)
           {
 
-            $hash = $this->password;
+            // $hash = $this->password;
          
-        return Yii::$app->security->validatePassword($password, $hash);
+        // return Yii::$app->security->validatePassword($password, $hash);
           }
-        public static function findByUsername($username)
+        public static function findByUserid($user_id)
       {
-        return static::findOne(['username' => $username /*,'status' => self::STATUS_ACTIVE*/]);
+        return static::findOne(['user_id' => $user_id /*,'status' => self::STATUS_ACTIVE*/]);
     }
 
 

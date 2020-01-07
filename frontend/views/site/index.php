@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel frontend\models\UsertSearch */
+/* @var $searchModel common\models\LeaveSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Список';
@@ -36,8 +36,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns'       => [
             ['class'    => 'yii\grid\SerialColumn'],
 
-            'first_name' ,
-            'last_name',
+            'user_first_name',
+            'user_last_name',
             'date_start',
             'date_finish',
 

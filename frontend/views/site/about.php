@@ -4,11 +4,12 @@
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \frontend\models\RequestForm */
 
+use common\models\User;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use kartik\date\DatePicker;
 
-if ( Yii::$app->user->identity->date_exists) {
+if ( Yii::$app->user->identity->status) {
 
 $this->title = 'Изменить заявку';
 
@@ -23,11 +24,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-lg-5">
 
-        <? if ( Yii::$app->user->identity->date_exists) {?>
+        <? if ( Yii::$app->user->identity->status) {?>
         <div style="color: green"> 
-          У вас уже есть заявка  с <?= Yii::$app->user->identity->date_start ?> по  <?= Yii::$app->user->identity->date_finish ?>. <br><br>
+          У вас уже есть заявка .  <br><br>
           В данный момент она ожидает подтверждения от руководителя.<br><br>
-            Если вы хотите изменить заявку, заолните форму ниже:<br>
+            Если вы хотите изменить заявку, заполните форму ниже:<br>
              </div>
         <?}else{ ?>
 
@@ -39,6 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
            </div>
 
           <?}?>
+         
             <? $form = ActiveForm::begin() ?>
             <?
         echo $form->field($model, 'date_start')->widget(DatePicker::classname(), [
@@ -78,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
    ?>                 
                 <div class="form-group">
-                  <?if ( Yii::$app->user->identity->date_exists) {?>
+                  <?if ( Yii::$app->user->identity->status) {?>
                     <?= Html::submitButton('Изменить заявку', ['class' => 'btn btn-success']) ?>
                     <?} else{?>
                    <?= Html::submitButton('Создать', ['class' => 'btn btn-success']) ?>
