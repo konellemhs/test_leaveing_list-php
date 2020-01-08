@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use  yii\grid\DataColumn;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\LeaveSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -34,8 +34,12 @@ $this->params['breadcrumbs'][] = $this->title;
                               }
                          },
         'columns'       => [
-            ['class'    => 'yii\grid\SerialColumn'],
-
+          
+          ['label' => '№',
+            'attribute' => 'id',
+            'options' => ['style' => 'width:2%'],
+          ],
+          
             'user_first_name',
             'user_last_name',
             'date_start',
