@@ -89,9 +89,9 @@ class SiteController extends Controller
                     
                         Yii::$app->session->setFlash('success', 'Добро пожаловать, '. Yii::$app->user->identity->first_name);
 
-                        // if (Yii::$app->user->identity->fixied === 1) {													// вывод сообщения о успехе, если заяка уже зафиксирована
-                        //         Yii::$app->session->setFlash('success', 'Ваша заявка на отпуск с '  .  Yii::$app->user->identity->date_start . ' по ' . Yii::$app->user->identity->date_finish . ' была зафиксирована. Хорошего отдыха!' );
-                        //         }
+                         if (Yii::$app->user->identity->status == User::STATUS_FIX) {													// вывод сообщения о успехе, если заяка уже зафиксирована
+                                 Yii::$app->session->setFlash('success', 'Ваша заявка на отпуск  была зафиксирована. Хорошего отдыха!' );
+                                 }
 
                         return $this->goHome();
                     }
@@ -105,45 +105,49 @@ class SiteController extends Controller
         }
 
 
-        public function actionLogin(){
+    public function actionLogin(){
 
-                 if (!Yii::$app->user->isGuest) {
-                return $this->goHome();
-                }
+                if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+            }
 
-                $model = new LoginForm();
-                if ($model->load(Yii::$app->request->post())) {
-                    try{
+            $model = new LoginForm();
+            if ($model->load(Yii::$app->request->post())) {
+                try{
 
-                        if($model->login()){
-                             Yii::$app->session->setFlash('success', 'Добро пожаловать, '. Yii::$app->user->identity->first_name);
-        //                      if (Yii::$app->user->identity->fixied === 1) {
-        //                           Yii::$app->session->setFlash('success', 'Ваша заявка на отпуск с '  .  Yii::$app->user->identity->date_start . ' по ' . Yii::$app->user->identity->date_finish . ' была зафиксирована. Хорошего отдыха!' );
-        // }
-                            return $this->goBack();
-                        }else{
-                            $model->password = '';
-                        }
-
-                    } catch (\DomainException $e){
-                        Yii::$app->session->setFlash('error', $e->getMessage());
-                        return $this->goHome();
+                    if($model->login()){
+                            Yii::$app->session->setFlash('success', 'Добро пожаловать, '. Yii::$app->user->identity->first_name);
+                        if (Yii::$app->user->identity->status == User::STATUS_FIX) {													// вывод сообщения о успехе, если заяка уже зафиксирована
+                         Yii::$app->session->setFlash('success', 'Ваша заявка на отпуск  была зафиксирована. Хорошего отдыха!' );
+    }
+                        return $this->goBack();
+                    }else{
+                        $model->password = '';
                     }
-        }
 
-        return $this->render('login', [
-                'model' => $model,
-            ]);
+                } catch (\DomainException $e){
+                    Yii::$app->session->setFlash('error', $e->getMessage());
+                    return $this->goHome();
+                }
+    }
+
+    return $this->render('login', [
+            'model' => $model,
+        ]);
 
     }
        
-        public function actionAbout(){
+    public function actionAbout(){
             
-             $model = new RequestForm();
+            if(\Yii::$app->user->can('leaving'))
+                {
+                    return $this->goHome();
+                }
+            $model = new RequestForm();
             
-             if ($model->load(Yii::$app->request->post()) && $model->request()) {
+            if ($model->load(Yii::$app->request->post()) && $model->request()) {
     
-                 Yii::$app->session->setFlash('success','Ваша заявка принята в обработку...');
+                 Yii::$app->session->setFlash('info','Ваша заявка принята в обработку...');
           
                 return $this->goHome();
             }
@@ -173,24 +177,19 @@ class SiteController extends Controller
     */
    public function actionUpdate($id)
     {   /*
-            Находим пользователя по id
+            Находим пользователя и заявку
             Устанавливаем ему статус зафиксированного пользователя
             Меняем роль пользователя на leaving
         */
             $leave = Leave::findIdentity($id);
-
+            $user = User::findIdentity($leave->user_id);
             $leave->fixied = 1;
-            
+            $user->status = User::STATUS_FIX;
+            $user->save();
             $leave->save();
 
-
-             $user = User::findIdentity($id);
-            
-             $user->status = User::STATUS_FIX;
-             $user->save();
-
-            // $role = Yii::$app->authManager->getRole('leaving');
-            // Yii::$app->authManager->assign($role, $id);
+             $role = Yii::$app->authManager->getRole('leaving');
+             Yii::$app->authManager->assign($role, $leave->user_id);
 
    //         Yii::$app->session->setFlash('success', 'Заявка на отпуск по сотруднику ' . $user->first_name . '  ' . $user->last_name  . '  с  ' .  $user->date_start . '  по  ' . $user->date_finish . '  зафиксирована');
             return $this->goBack();
@@ -204,11 +203,7 @@ class SiteController extends Controller
 
      public function actionIndex()
     {
-        // if (Yii::$app->user->isGuest) {
-        //        return Yii::$app->response->redirect('site\login');
-        // }
-       
-    
+        
         $searchModel = new LeaveSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

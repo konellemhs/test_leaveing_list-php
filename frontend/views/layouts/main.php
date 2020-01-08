@@ -36,7 +36,6 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-   
 
     if (Yii::$app->user->identity->role === '0' && Yii::$app->user->identity->status == User::STATUS_NONE ) {  
          $menuItems = [
