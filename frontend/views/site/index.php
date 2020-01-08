@@ -34,11 +34,8 @@ $this->params['breadcrumbs'][] = $this->title;
                               }
                          },
         'columns'       => [
+          ['class' => 'yii\grid\SerialColumn'],
           
-          ['label' => '№',
-            'attribute' => 'id',
-            'options' => ['style' => 'width:2%'],
-          ],
           
             'user_first_name',
             'user_last_name',
