@@ -40,7 +40,7 @@ AppAsset::register($this);
     if (Yii::$app->user->identity->role === '0' && Yii::$app->user->identity->status == User::STATUS_NONE ) {  
          $menuItems = [
                 ['label' => 'Список заявок', 'url' => ['/site/index']],
-                ['label' => '+Создать заявку', 'url' => ['/site/about']]];
+                ['label' => '+Создать заявку', 'url' => ['/site/request']]];
    
     }elseif(Yii::$app->user->identity->role === '0' &&  Yii::$app->user->identity->status == User::STATUS_FIX ){
 
@@ -51,7 +51,7 @@ AppAsset::register($this);
 
        $menuItems = [
         ['label' => 'Список заявок', 'url' => ['/site/index']],
-        ['label' => 'Моя заявка', 'url' => ['/site/about']]];
+        ['label' => 'Моя заявка', 'url' => ['/site/request']]];
 
     }elseif(Yii::$app->user->identity->role === '1'){
        $menuItems = [

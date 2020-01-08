@@ -29,17 +29,17 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['index','list','role','logout'],
+                        'actions' => ['index','leavingList','role','logout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['about'],
+                        'actions' => ['request'],
                         'allow' => true,
                         'roles' => ['employee'],
                     ],
                     [
-                        'actions' => ['about'],
+                        'actions' => ['request'],
                         'allow' => false,
                         'roles' => ['boss'],
                          // редиректит пользователя в случае попытки совершить action не для его роли
@@ -137,7 +137,7 @@ class SiteController extends Controller
 
     }
        
-    public function actionAbout(){
+    public function actionRequest(){
             
             if(\Yii::$app->user->can('leaving'))
                 {
@@ -153,7 +153,7 @@ class SiteController extends Controller
             }
 
 
-        return $this->render('about', [
+        return $this->render('request', [
             'model' => $model,
         ]);
     }
@@ -213,7 +213,7 @@ class SiteController extends Controller
             'dataProvider' => $dataProvider,
         ]);
         }
-        return $this->render('list', [
+        return $this->render('leavingList', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
