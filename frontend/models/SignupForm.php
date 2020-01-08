@@ -5,8 +5,10 @@ use Yii;
 use yii\base\Model;
 use common\models\User;
 use yii\behaviors\TimestampBehavior;
-/**
- * Signup newt_form()
+/*
+ 
+  Signup newt_form()
+   Модель для регистрации
  */
 class SignupForm extends Model
 {
@@ -60,14 +62,15 @@ class SignupForm extends Model
             return null;
         }
         //создаем новую запись в таблице user
-        $user = new User();                             
+        $user = new User(); 
+                                    
         $user->last_name  = $this->last_name;
         $user->first_name = $this->first_name;
         $user->username   = $this->username;
         $user->setPassword($this->password);
         $user->role       = $this->role;
         $user->status     = User::STATUS_NONE;
-        // $user->save();
+        
          //сохранение пользователя
          if ($user->save()) {    
               // Инициализируем установку роли для пользователя                  

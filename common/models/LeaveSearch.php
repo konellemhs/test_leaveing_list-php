@@ -7,8 +7,14 @@ use yii\data\ActiveDataProvider;
 use common\models\Leave;
 
 /**
- * UsertSearch represents the model behind the search form of `frontend\models\Usert`.
+ * LeaveSearch represents the model behind the search form of `common\models\Leave`.
  */
+
+    /*
+        Модель расширяет модель "Leave" дополняя функционал род. класса
+    */
+    
+
 class LeaveSearch extends Leave
 {
     /**
@@ -68,7 +74,6 @@ class LeaveSearch extends Leave
 
         $query->andFilterWhere(['like', 'user_first_name', $this->user_first_name])
             ->andFilterWhere(['like', 'user_last_name', $this->user_last_name])
-            // ->andFilterWhere(['like', 'role', $this->role]);
             ->andFilterWhere(['like', 'start', $this->date_start])
             ->andFilterWhere(['like', 'date_finish', $this->date_finish]);
 

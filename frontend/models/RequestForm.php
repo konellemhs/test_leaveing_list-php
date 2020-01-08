@@ -5,20 +5,12 @@ use Yii;
 use yii\base\Model;
 use common\models\User;
 use common\models\Leave;
-use yii\behaviors\TimestampBehavior;
-use yii2\validators\DateValidator;
 class RequestForm extends Model
 {
 	public $date_start;
 	public $date_finish;
     public $test;
 	public $fixied;
-   
-    private $date_s;
-    private $date_f;
-
-  
-
 
     public function rules(){
         return [
@@ -40,15 +32,20 @@ class RequestForm extends Model
         ];
     }
 
-    			//сравниваем даты(начало должно быть раньше конца)
+        /*            
+                Метод проверки введенных дат 
+                Возвращает boolean
+        */
     public function validateDate(){
+        // Разиваем введенные даты на массивы  вида : d.m.Y
      $start = date_parse_from_format("d.m.Y", $this->date_start);
      $end   = date_parse_from_format("d.m.Y", $this->date_finish);
 
-
+        // сравниваем поэлементно два массива
+        // дата начала не может быть позже даты конца
 
         if ($end['year'] > $start['year']) {
-          
+      
             return true;
 
         }elseif ($end['year'] == $start['year']) {
@@ -97,9 +94,9 @@ class RequestForm extends Model
                 break;
 
            case User::STATUS_WAIT :
-                // echo '///////////';
+               
                 $leave= Leave::findByUserid($user->id);
-                // User::print($leave);
+                
                 break;
 
         }
@@ -109,25 +106,25 @@ class RequestForm extends Model
     }
 
             /*
-            
+                Основной метод
             */
     public function request(){
-
+                    // проверяем коррекность введенных дат
                if (!$this->validateDate()) {
                     return false;
                 }
-                
+                    // Находим сущность юзера 
                 $user =User::findIdentity(Yii::$app->user->identity->id);
-                // User::print($user->status);
+                    // получаем новую или уже существующую заявку
                 $leave = $this->getLeave($user);
-                // User::print($leave);
                 
+                    // обрабатываем заявку
                 $leave->user_id         = $user->id;
                 $leave->user_first_name = $user->first_name;
                 $leave->user_last_name  = $user->last_name;
                 $leave->date_start      = $this->date_start;
                 $leave->date_finish     = $this->date_finish;
-                
+                    //меняем статус юзера
                 $user->status           = User::STATUS_WAIT;
                 $user->save();
                

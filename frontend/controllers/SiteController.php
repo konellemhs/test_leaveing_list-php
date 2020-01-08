@@ -16,7 +16,9 @@ use common\models\LeaveSearch;
  */
 class SiteController extends Controller
 {
-
+        /*
+            Управление дорступом на основе ролей
+        */
     public function behaviors()
     {
         return [
@@ -47,6 +49,7 @@ class SiteController extends Controller
                                 return $action->controller->redirect('index');
                             },
                     ],
+                    
                     [
                         'actions' => ['update'],
                         'allow' => true,
@@ -61,6 +64,7 @@ class SiteController extends Controller
                                 return $action->controller->redirect('index');
                             },
                     ],
+                    
                 ],
             ],
             'verbs' => [
@@ -104,13 +108,12 @@ class SiteController extends Controller
             ]);
         }
 
-
+            /*
+                экшн входа на сайт
+            */
     public function actionLogin(){
 
-                if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-            }
-
+       
             $model = new LoginForm();
             if ($model->load(Yii::$app->request->post())) {
                 try{
@@ -119,7 +122,7 @@ class SiteController extends Controller
                             Yii::$app->session->setFlash('success', 'Добро пожаловать, '. Yii::$app->user->identity->first_name);
                         if (Yii::$app->user->identity->status == User::STATUS_FIX) {													// вывод сообщения о успехе, если заяка уже зафиксирована
                          Yii::$app->session->setFlash('success', 'Ваша заявка на отпуск  была зафиксирована. Хорошего отдыха!' );
-    }
+                         }
                         return $this->goBack();
                     }else{
                         $model->password = '';
@@ -129,20 +132,26 @@ class SiteController extends Controller
                     Yii::$app->session->setFlash('error', $e->getMessage());
                     return $this->goHome();
                 }
-    }
+            }
 
     return $this->render('login', [
             'model' => $model,
         ]);
 
     }
-       
+      /*
+            экшн создания заявки 
+            Использует модель RequestForm и вью request
+            В случае успеха редиректит на гл станицу
+
+       */ 
     public function actionRequest(){
             
             if(\Yii::$app->user->can('leaving'))
-                {
-                    return $this->goHome();
-                }
+            {
+                return $this->goHome();
+            }
+
             $model = new RequestForm();
             
             if ($model->load(Yii::$app->request->post()) && $model->request()) {
@@ -191,8 +200,9 @@ class SiteController extends Controller
              $role = Yii::$app->authManager->getRole('leaving');
              Yii::$app->authManager->assign($role, $leave->user_id);
 
-   //         Yii::$app->session->setFlash('success', 'Заявка на отпуск по сотруднику ' . $user->first_name . '  ' . $user->last_name  . '  с  ' .  $user->date_start . '  по  ' . $user->date_finish . '  зафиксирована');
-            return $this->goBack();
+            Yii::$app->session->setFlash('info', 'Заявка на отпуск по сотруднику ' . $user->first_name . '  ' . $user->last_name  . '  зафиксирована');
+
+        return $this->goBack();
        
    }
 
@@ -207,11 +217,18 @@ class SiteController extends Controller
         $searchModel = new LeaveSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        if (Yii::$app->user->identity->role == '1') {
-               return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        /*
+            Взависимости о роли пользователя используем как вью "index" или "leavingList"
+        */
+       
+
+
+        if(\Yii::$app->user->can('boss'))
+        {
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);  
         }
         return $this->render('leavingList', [
             'searchModel' => $searchModel,
@@ -228,22 +245,6 @@ class SiteController extends Controller
 
 
 
-    // public function actionRole(){
-    //     //         $role = Yii::$app->authManager->createRole('boss');
-    //     // $role->description = 'Руководитель';
-    //     // Yii::$app->authManager->add($role);
-         
-    //     // $user = Yii::$app->authManager->createRole('employee');
-    //     // $user->description = 'Сотрудник';
-    //     // Yii::$app->authManager->add($user);
-        
-    //     $fix = Yii::$app->authManager->createRole('leaving');
-    //     $fix->description = 'Зафиксированный сотрудник';
-    //     Yii::$app->authManager->add($fix);
-     
-    //     echo 21354;
-                
-    //         }
 
 }
 
