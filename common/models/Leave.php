@@ -69,7 +69,7 @@ class Leave extends ActiveRecord
     */
     public static function findByUserid($user_id){
 
-        return static::findOne(['user_id' => $user_id /*,'status' => self::STATUS_ACTIVE*/]);
+        return static::findOne(['user_id' => $user_id ]);
     }
 
   

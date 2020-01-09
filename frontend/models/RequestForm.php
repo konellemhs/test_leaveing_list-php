@@ -37,7 +37,7 @@ class RequestForm extends Model
                 Возвращает boolean
         */
     public function validateDate(){
-        // Разиваем введенные даты на массивы  вида : d.m.Y
+        // Разбиваем введенные даты на массивы  вида : d.m.Y
      $start = date_parse_from_format("d.m.Y", $this->date_start);
      $end   = date_parse_from_format("d.m.Y", $this->date_finish);
 
